@@ -1,4 +1,5 @@
 import { Shark } from "./sharks.model";
+// import db
 
 export function getShark(): Shark {
   return {
