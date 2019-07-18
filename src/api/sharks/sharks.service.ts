@@ -1,7 +1,6 @@
-import { Shark } from "./sharks.model";
-// import db
+import { getDatabase } from "../../setup/db/db";
 
-export function getShark(): Shark {
+export function findShark() {
   return {
     id: "shark id",
     name: "shark name",
@@ -9,4 +8,16 @@ export function getShark(): Shark {
     description: "shark description",
     image: "shark image"
   };
+}
+
+export function findAllSharks(): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const db = getDatabase();
+    const sharks = db.select("*").from("sharks");
+
+    if (sharks) {
+      resolve(sharks);
+    }
+    reject();
+  });
 }
