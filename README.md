@@ -1,6 +1,6 @@
 # Node Sharkies
 
-Node.js with TypeScript shark list API
+Node.js with TypeScript starter shark list API
 
 ## License
 
