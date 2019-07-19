@@ -8,7 +8,6 @@ export default function init(app: Application): Promise<any> {
       !: Add new routes here
     */
 
-    app.get("/", getShark);
     app.get("/sharks", getSharks);
 
     resolve();
@@ -18,11 +17,6 @@ export default function init(app: Application): Promise<any> {
 /*
   !: Add new handlers here
 */
-
-export function getShark(req: Request, res: Response, next: NextFunction) {
-  const shark = SharksService.findShark();
-  res.status(200).json(shark);
-}
 
 export async function getSharks(
   req: Request,
