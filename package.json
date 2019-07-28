@@ -1,0 +1,74 @@
+{
+  "name": "graphql-booking-api",
+  "version": "1.0.0",
+  "description": "GraphQL event booking API written in Node.js with Typescript",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "format": "prettier --write --tab-width 2 \"src/**/*.ts\"",
+    "start": "npm run start:dev",
+    "start:dev": "nodemon --config nodemon.json",
+    "prestart:prod": "npm run build",
+    "start:prod": "node dist/main.js",
+    "lint": "tslint -p tsconfig.json -c tslint.json",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-graphql": "^0.9.0",
+    "graphql": "^14.4.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.5",
+    "@types/graphql": "^14.2.3",
+    "@types/jest": "^24.0.15",
+    "@types/morgan": "^1.7.36",
+    "@types/node": "^12.6.8",
+    "@types/supertest": "^2.0.8",
+    "dotenv": "^8.0.0",
+    "jest": "^24.8.0",
+    "nodemon": "^1.19.1",
+    "pre-commit": "^1.2.2",
+    "prettier": "^1.18.2",
+    "supertest": "^4.0.2",
+    "ts-jest": "^24.0.2",
+    "ts-node": "^8.3.0",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.3"
+  },
+  "pre-commit": [
+    "format",
+    "lint",
+    "test"
+  ],
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".spec.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agildav/graphql-booking-api.git"
+  },
+  "keywords": [
+    "graphql"
+  ],
+  "author": "agildav",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/agildav/graphql-booking-api/issues"
+  },
+  "homepage": "https://github.com/agildav/graphql-booking-api#readme"
+}
