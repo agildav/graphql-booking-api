@@ -1,17 +1,15 @@
 import { Application } from "express";
 import Graphql from "./graphql";
 
-export async function init(app: Application): Promise<any> {
-  return new Promise(async (resolve, reject) => {
-    try {
-      console.log(":: Router, starting");
+export async function init(app: Application): Promise<void> {
+  try {
+    console.log(":: Router, starting");
 
-      await new Graphql().graphqlInit(app);
+    await new Graphql().graphqlInit(app);
 
-      console.log(":: Router, ready");
-      resolve();
-    } catch (err) {
-      reject(err);
-    }
-  });
+    console.log(":: Router, ready");
+    return;
+  } catch (err) {
+    throw err;
+  }
 }

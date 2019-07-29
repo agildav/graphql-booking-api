@@ -41,10 +41,10 @@ export const init = () => {
           });
         })
         .catch(err => {
-          console.log("error initializing database ", err);
+          console.log("error initializing database -> ", err);
         });
     })
     .catch(err => {
-      console.log("error initializing server ", err);
+      console.log("error initializing server -> ", err);
     });
 };
