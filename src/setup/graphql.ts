@@ -2,34 +2,9 @@ import { Application } from "express";
 import graphqlHttp from "express-graphql";
 import { buildSchema } from "graphql";
 
-// Receive these props from user
-interface EventInput {
-  title: string;
-  description: string;
-  price: number;
-}
-
-// Auto generate these props
-interface Event extends EventInput {
-  _id: string;
-  date: string;
-}
+import { IEventInput, Event, IEvent } from "../api/event/event.model";
 
 export default class Graphql {
-  private events: [Event];
-
-  constructor() {
-    this.events = [
-      {
-        _id: Math.random().toString(),
-        title: "title one",
-        description: "description one",
-        price: Math.random(),
-        date: new Date().toISOString()
-      }
-    ];
-  }
-
   graphqlInit(app: Application) {
     console.log(":: Setting GraphQL");
     app.use(
@@ -64,20 +39,32 @@ export default class Graphql {
           }
         `),
         rootValue: {
-          events: (): [Event] => {
-            return this.events;
+          events: async (): Promise<IEvent[]> => {
+            try {
+              const events = await Event.find();
+              return events;
+            } catch (err) {
+              console.log(err);
+              throw err;
+            }
           },
-          createEvent: (e: { eventInput: EventInput }): string => {
-            const newEvent = {
-              _id: Math.random().toString(),
+          createEvent: async (e: {
+            eventInput: IEventInput;
+          }): Promise<string> => {
+            const newEvent = new Event({
               title: e.eventInput.title,
               description: e.eventInput.description,
               price: e.eventInput.price,
               date: new Date().toISOString()
-            };
+            });
 
-            this.events.push(newEvent);
-            return newEvent._id;
+            try {
+              const r = await newEvent.save();
+              return r._id;
+            } catch (err) {
+              console.log(err);
+              throw err;
+            }
           }
         },
         graphiql: true

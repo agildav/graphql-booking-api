@@ -1,10 +1,16 @@
 import express from "express";
 import cors from "cors";
-import mongoose from "mongoose";
+import { connect } from "mongoose";
 import * as router from "./router";
 
 const port = process.env.PORT || 3000;
-const db_connection_string = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER_NAME}-ldcb2.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+
+const DB_USER = process.env.DB_USER;
+const DB_PASSWORD = process.env.DB_PASSWORD;
+const DB_CLUSTER_NAME = process.env.DB_CLUSTER_NAME;
+const DB_NAME = process.env.DB_NAME;
+
+const dbURL = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_CLUSTER_NAME}-ldcb2.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
 
 export const init = () => {
   console.log(":: Server, starting");
@@ -23,8 +29,10 @@ export const init = () => {
     .init(app)
     .then(() => {
       console.log(":: MongoDB, starting");
-      mongoose
-        .connect(db_connection_string, { useNewUrlParser: true })
+      connect(
+        dbURL,
+        { useNewUrlParser: true }
+      )
         .then(() => {
           console.log(":: MongoDB, ready");
           app.listen(port, () => {
