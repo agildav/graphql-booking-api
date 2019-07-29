@@ -2,35 +2,57 @@ import { Application } from "express";
 import graphqlHttp from "express-graphql";
 import { buildSchema } from "graphql";
 
-export function graphqlInit(app: Application) {
-  console.log(":: Setting GraphQL");
-  app.use(
-    "/graphql",
-    graphqlHttp({
-      schema: buildSchema(`
-        type RootQuery {
-          events: [String!]!
-        }
+import * as EventService from "../api/event/event.service";
 
-        type RootMutation {
-          createEvent(name: String): String
-        }
+export default class Graphql {
+  async graphqlInit(app: Application): Promise<void> {
+    console.log(":: Setting GraphQL");
 
-        schema {
-          query: RootQuery
-          mutation: RootMutation
-        }
-      `),
-      rootValue: {
-        events: () => {
-          return ["Romantic Cooking", "Sailing"];
+    app.use(
+      "/graphql",
+      graphqlHttp({
+        schema: buildSchema(`
+                type Event {
+                  _id: ID!
+                  title: String!
+                  description: String!
+                  price: Float!
+                  date: String!
+                }
+
+                input EventInput {
+                  title: String!
+                  description: String!
+                  price: Float!
+                }
+
+                type RootQuery {
+                  events: [Event!]!
+                }
+
+                type RootMutation {
+                  createEvent(eventInput: EventInput): ID
+                }
+
+                schema {
+                  query: RootQuery
+                  mutation: RootMutation
+                }
+              `),
+        rootValue: {
+          // RootQuery
+          async events() {
+            return EventService.getEvents();
+          },
+          // RootMutation
+          async createEvent(req) {
+            return EventService.createEvent(req);
+          }
         },
-        createEvent: args => {
-          const eventName = args.name;
-          return eventName;
-        }
-      },
-      graphiql: true
-    })
-  );
+        graphiql: true
+      })
+    );
+
+    return;
+  }
 }
