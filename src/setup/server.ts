@@ -7,10 +7,10 @@ const port = process.env.PORT || 3000;
 
 const DB_USER = process.env.DB_USER;
 const DB_PASSWORD = process.env.DB_PASSWORD;
-const DB_CLUSTER_NAME = process.env.DB_CLUSTER_NAME;
+const DB_CLUSTER = process.env.DB_CLUSTER;
 const DB_NAME = process.env.DB_NAME;
 
-const dbURL = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_CLUSTER_NAME}-ldcb2.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
+const dbURL = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_CLUSTER}/${DB_NAME}?retryWrites=true&w=majority`;
 
 export const init = () => {
   console.log(":: Server, starting");
