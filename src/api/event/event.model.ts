@@ -8,9 +8,13 @@ export interface IEventInput {
 }
 
 // Auto generate these props
-export interface IEvent extends IEventInput, Document {
-  _id: string;
-  date: string;
+export interface IEvent extends IEventInput {
+  _id: any;
+  date: string | number;
+}
+
+export interface IEventDoc extends IEvent, Document {
+  creator?: Schema.Types.ObjectId;
 }
 
 const eventSchema = new Schema({
@@ -29,7 +33,11 @@ const eventSchema = new Schema({
   date: {
     required: true,
     type: Date
+  },
+  creator: {
+    type: Schema.Types.ObjectId,
+    ref: "User"
   }
 });
 
-export const Event = model<IEvent>("Event", eventSchema);
+export const Event = model<IEventDoc>("Event", eventSchema);

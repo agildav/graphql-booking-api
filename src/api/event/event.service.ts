@@ -1,6 +1,6 @@
-import { IEvent, IEventInput, Event } from "./event.model";
+import { IEventDoc, IEventInput, Event } from "./event.model";
 
-export async function getEvents(): Promise<IEvent[]> {
+export async function getEvents(): Promise<IEventDoc[]> {
   try {
     const events = await Event.find();
     return events;
@@ -19,6 +19,7 @@ export async function createEvent(req: {
       description: req.eventInput.description,
       price: req.eventInput.price,
       date: new Date().toISOString()
+      // TODO: Creator
     });
 
     const r = await newEvent.save();
