@@ -13,7 +13,9 @@ export interface IEvent extends IEventInput {
   date: string | number;
 }
 
-export interface IEventDoc extends IEvent, Document {}
+export interface IEventDoc extends IEvent, Document {
+  creator?: Schema.Types.ObjectId;
+}
 
 const eventSchema = new Schema({
   title: {
@@ -31,6 +33,10 @@ const eventSchema = new Schema({
   date: {
     required: true,
     type: Date
+  },
+  creator: {
+    type: Schema.Types.ObjectId,
+    ref: "User"
   }
 });
 
