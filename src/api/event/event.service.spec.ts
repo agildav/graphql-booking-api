@@ -3,6 +3,7 @@ import * as mocks from "./event.mocks.spec";
 
 beforeAll(() => {
   mocks.mockFind();
+  mocks.mockSave();
 });
 
 afterAll(() => {
@@ -17,5 +18,21 @@ describe("Event service", () => {
     const response = await EventService.getEvents();
 
     expect(response).toHaveLength(qtyEvents);
+  });
+
+  it("creates an event", async () => {
+    expect.assertions(2);
+
+    const response = await EventService.createEvent({
+      eventInput: {
+        title: "title create event test",
+        description: "description create event test",
+        price: Math.random()
+      }
+    });
+
+    const maxValueID = 1.0;
+    expect(response).toBeTruthy();
+    expect(parseFloat(response)).toBeLessThan(maxValueID);
   });
 });

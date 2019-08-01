@@ -9,26 +9,38 @@ export function mockFind() {
         resolve([
           {
             _id: Math.random().toString(),
-            title: "title one",
-            description: "desc one",
+            title: "mock title one",
+            description: "mock description one",
             price: Math.random(),
             date: new Date().toISOString()
           },
           {
             _id: Math.random().toString(),
-            title: "title two",
-            description: "desc two",
+            title: "mock title two",
+            description: "mock description two",
             price: Math.random(),
             date: new Date().toISOString()
           },
           {
             _id: Math.random().toString(),
-            title: "title three",
-            description: "desc three",
+            title: "mock title three",
+            description: "mock description three",
             price: Math.random(),
             date: new Date().toISOString()
           }
         ]);
+      })
+  );
+}
+
+export function mockSave() {
+  const mock = jest.spyOn(Event.prototype, "save");
+  mock.mockImplementation(
+    (): any =>
+      new Promise(resolve => {
+        resolve({
+          _id: Math.random().toString()
+        });
       })
   );
 }
