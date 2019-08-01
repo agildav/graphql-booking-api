@@ -19,7 +19,6 @@ export async function createEvent(req: {
       description: req.eventInput.description,
       price: req.eventInput.price,
       date: new Date().toISOString()
-      // TODO: Creator
     });
 
     const r = await newEvent.save();
@@ -29,3 +28,4 @@ export async function createEvent(req: {
     throw err;
   }
 }
+// TODO: Creator

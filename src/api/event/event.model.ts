@@ -10,7 +10,7 @@ export interface IEventInput {
 // Auto generate these props
 export interface IEvent extends IEventInput {
   _id: any;
-  date: string | number;
+  date: string;
 }
 
 export interface IEventDoc extends IEvent, Document {
