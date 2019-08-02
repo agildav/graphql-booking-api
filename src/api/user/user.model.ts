@@ -4,7 +4,7 @@ import { Schema, model, Document } from "mongoose";
 export interface IUserInput {
   email: string;
   password: string;
-  username: string;
+  username?: string;
 }
 
 // Auto generate these props

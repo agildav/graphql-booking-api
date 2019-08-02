@@ -24,7 +24,9 @@ export default class Graphql {
                 type User {
                   _id: ID!
                   email: String!
-                  password: String
+                  password: String!
+                  username: String
+                  createdAt: String!
                 }
 
                 input EventInput {
@@ -36,6 +38,7 @@ export default class Graphql {
                 input UserInput {
                   email: String!
                   password: String!
+                  username: String
                 }
 
                 type RootQuery {
