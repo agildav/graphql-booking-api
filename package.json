@@ -4,6 +4,7 @@
   "description": "GraphQL event booking API written in Node.js with Typescript",
   "main": "dist/main.js",
   "scripts": {
+    "add": "git add .",
     "build": "tsc -p tsconfig.build.json",
     "format": "prettier --write --tab-width 2 \"src/**/*.ts\"",
     "start": "npm run start:dev",
@@ -11,7 +12,7 @@
     "prestart:prod": "npm run build",
     "start:prod": "node dist/main.js",
     "lint": "tslint -p tsconfig.json -c tslint.json",
-    "test": "jest",
+    "test": "jest --silent",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage"
   },
@@ -45,6 +46,7 @@
   },
   "pre-commit": [
     "format",
+    "add",
     "lint",
     "test"
   ],

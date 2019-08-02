@@ -7,7 +7,7 @@ export async function getUsers(): Promise<IUserDoc[]> {
     return users;
   } catch (err) {
     console.log("error, could not find users -> ", err);
-    throw err;
+    return err;
   }
 }
 
@@ -32,7 +32,7 @@ export async function createUser(req: {
     return r._id;
   } catch (err) {
     console.log("error, could not create user -> ", err);
-    throw err;
+    return err;
   }
 }
 // TODO: Created events

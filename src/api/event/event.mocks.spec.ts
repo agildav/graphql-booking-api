@@ -31,6 +31,7 @@ export function mockFind() {
         ]);
       })
   );
+  return mock;
 }
 
 export function mockSave() {
@@ -43,4 +44,5 @@ export function mockSave() {
         });
       })
   );
+  return mock;
 }

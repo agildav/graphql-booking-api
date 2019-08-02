@@ -6,7 +6,7 @@ export async function getEvents(): Promise<IEventDoc[]> {
     return events;
   } catch (err) {
     console.log("error, could not find events -> ", err);
-    throw err;
+    return err;
   }
 }
 
@@ -25,7 +25,7 @@ export async function createEvent(req: {
     return r._id;
   } catch (err) {
     console.log("error, could not create event -> ", err);
-    throw err;
+    return err;
   }
 }
 // TODO: Creator
