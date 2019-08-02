@@ -1,10 +1,17 @@
-import { IUserDoc, IUserInput, User } from "./user.model";
+import { IUserInput, User, IUser } from "./user.model";
 import bcrypt from "bcryptjs";
 
-export async function getUsers(): Promise<IUserDoc[]> {
+export async function getUsers(): Promise<IUser[]> {
   try {
     const users = await User.find();
-    return users;
+    // Hide the password
+    return users.map(user => {
+      const filteredUser: IUser = user;
+
+      filteredUser.password = null;
+
+      return filteredUser;
+    });
   } catch (err) {
     console.log("error, could not find users -> ", err);
     return err;

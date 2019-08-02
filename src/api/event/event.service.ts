@@ -1,6 +1,6 @@
-import { IEventDoc, IEventInput, Event } from "./event.model";
+import { IEventInput, Event, IEvent } from "./event.model";
 
-export async function getEvents(): Promise<IEventDoc[]> {
+export async function getEvents(): Promise<IEvent[]> {
   try {
     const events = await Event.find();
     return events;

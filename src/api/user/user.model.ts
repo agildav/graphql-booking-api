@@ -11,11 +11,10 @@ export interface IUserInput {
 export interface IUser extends IUserInput {
   _id: any;
   createdAt: string;
-}
-
-export interface IUserDoc extends IUser, Document {
   createdEvents?: Schema.Types.ObjectId[];
 }
+
+export interface IUserDoc extends IUser, Document {}
 
 const userSchema = new Schema({
   email: {

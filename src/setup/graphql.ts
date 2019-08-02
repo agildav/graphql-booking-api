@@ -24,7 +24,7 @@ export default class Graphql {
                 type User {
                   _id: ID!
                   email: String!
-                  password: String!
+                  password: String
                   username: String
                   createdAt: String!
                 }

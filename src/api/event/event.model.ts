@@ -11,11 +11,10 @@ export interface IEventInput {
 export interface IEvent extends IEventInput {
   _id: any;
   date: string;
-}
-
-export interface IEventDoc extends IEvent, Document {
   creator?: Schema.Types.ObjectId;
 }
+
+export interface IEventDoc extends IEvent, Document {}
 
 const eventSchema = new Schema({
   title: {
