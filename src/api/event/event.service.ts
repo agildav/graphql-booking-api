@@ -3,7 +3,11 @@ import { IEventInput, Event, IEvent } from "./event.model";
 export async function getEvents(): Promise<IEvent[]> {
   try {
     const events = await Event.find();
-    return events;
+    return events.map(event => {
+      event.date = new Date(event.date).toISOString();
+
+      return event;
+    });
   } catch (err) {
     console.log("error, could not find events -> ", err);
     return err;

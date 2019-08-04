@@ -6,11 +6,10 @@ export async function getUsers(): Promise<IUser[]> {
     const users = await User.find();
     // Hide the password
     return users.map(user => {
-      const filteredUser: IUser = user;
+      user.password = null;
+      user.createdAt = new Date(user.createdAt).toISOString();
 
-      filteredUser.password = null;
-
-      return filteredUser;
+      return user;
     });
   } catch (err) {
     console.log("error, could not find users -> ", err);

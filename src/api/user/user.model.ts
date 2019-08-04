@@ -36,7 +36,7 @@ const userSchema = new Schema({
   ],
   createdAt: {
     required: true,
-    type: Date
+    type: String
   }
 });
 

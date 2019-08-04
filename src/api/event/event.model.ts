@@ -31,7 +31,7 @@ const eventSchema = new Schema({
   },
   date: {
     required: true,
-    type: Date
+    type: String
   },
   creator: {
     type: Schema.Types.ObjectId,
