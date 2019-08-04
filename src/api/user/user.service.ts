@@ -1,5 +1,5 @@
 import { IUserInput, User, IUser } from "./user.model";
-import bcrypt from "bcryptjs";
+import { hash } from "bcryptjs";
 
 export async function getUsers(): Promise<IUser[]> {
   try {
@@ -27,7 +27,7 @@ export async function createUser(req: {
       throw new Error("user already exists");
     }
 
-    const hashedPassword = await bcrypt.hash(req.userInput.password, 12);
+    const hashedPassword = await hash(req.userInput.password, 12);
     const newUser = new User({
       email: req.userInput.email,
       password: hashedPassword,
