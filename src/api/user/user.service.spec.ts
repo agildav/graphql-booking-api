@@ -1,9 +1,11 @@
 import * as UserService from "./user.service";
 import * as mocks from "./user.mocks.spec";
+import * as EventMocks from "../event/event.mocks.spec";
 
 beforeAll(() => {
   mocks.mockFind();
   mocks.mockSave();
+  EventMocks.mockFind();
 });
 
 afterAll(() => {
@@ -21,7 +23,7 @@ describe("User service", () => {
   });
 
   it("creates a user", async () => {
-    expect.assertions(2);
+    expect.assertions(1);
     const mockFindOne = mocks.mockFindOneNotExisting();
 
     const response = await UserService.createUser({
@@ -32,9 +34,7 @@ describe("User service", () => {
       }
     });
 
-    const maxValueID = 1.0;
     expect(response).toBeTruthy();
-    expect(parseFloat(response)).toBeLessThan(maxValueID);
     mockFindOne.mockRestore();
   });
 

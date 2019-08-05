@@ -7,6 +7,7 @@ export const graphqlSchema = buildSchema(`
     description: String!
     price: Float!
     date: String!
+    creator: User!
   }
 
   type User {
@@ -15,6 +16,7 @@ export const graphqlSchema = buildSchema(`
     password: String
     username: String
     createdAt: String!
+    createdEvents: [Event!]!
   }
 
   input EventInput {

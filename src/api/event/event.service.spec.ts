@@ -1,9 +1,12 @@
 import * as EventService from "./event.service";
 import * as mocks from "./event.mocks.spec";
+import * as UserMocks from "../user/user.mocks.spec";
 
 beforeAll(() => {
   mocks.mockFind();
   mocks.mockSave();
+  UserMocks.mockFind();
+  UserMocks.mockFindOneExisting();
 });
 
 afterAll(() => {
@@ -21,7 +24,7 @@ describe("Event service", () => {
   });
 
   it("creates an event", async () => {
-    expect.assertions(2);
+    expect.assertions(1);
 
     const response = await EventService.createEvent({
       eventInput: {
@@ -31,8 +34,6 @@ describe("Event service", () => {
       }
     });
 
-    const maxValueID = 1.0;
     expect(response).toBeTruthy();
-    expect(parseFloat(response)).toBeLessThan(maxValueID);
   });
 });

@@ -1,4 +1,5 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, Document, Types } from "mongoose";
+import { IUser } from "../user/user.model";
 
 // Receive these props from user
 export interface IEventInput {
@@ -11,7 +12,7 @@ export interface IEventInput {
 export interface IEvent extends IEventInput {
   _id: any;
   date: string;
-  creator?: Schema.Types.ObjectId;
+  creator: Types.ObjectId | IUser | string;
 }
 
 export interface IEventDoc extends IEvent, Document {}
@@ -34,6 +35,7 @@ const eventSchema = new Schema({
     type: String
   },
   creator: {
+    required: true,
     type: Schema.Types.ObjectId,
     ref: "User"
   }
