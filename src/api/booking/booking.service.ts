@@ -64,7 +64,7 @@ export async function cancelBooking(req: {
   try {
     const booking = await Booking.findOne({ _id: req.bookingId });
 
-    const eventId = booking._doc.event._id;
+    const eventId = booking.event;
     const event = await getEventById(eventId);
 
     await Booking.deleteOne({ _id: req.bookingId });
