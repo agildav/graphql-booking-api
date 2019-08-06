@@ -22,6 +22,8 @@ export const graphqlResolvers = {
   },
   bookEvent: async function bookEvent(req) {
     return BookingService.bookEvent(req);
+  },
+  cancelBooking: async function cancelBooking(req) {
+    return BookingService.cancelBooking(req);
   }
-  // TODO: Cancel booking
 };

@@ -4,7 +4,7 @@ import { IEvent } from "../event/event.model";
 import { getEventById } from "../event/event.service";
 import { getUserById } from "../user/user.service";
 
-/** getBookings finds all the bookings */
+/** getBookings finds all the bookings and parses them */
 export async function getBookings(): Promise<IBooking[]> {
   try {
     const bookings = await Booking.find();
@@ -40,6 +40,38 @@ export async function bookEvent(req: {
     return parseBooking(r);
   } catch (error) {
     console.log("error, could not book event", error);
+    return error;
+  }
+}
+
+/** getBookingById finds a single booking by id and parses it */
+export async function getBookingById(
+  id: Types.ObjectId | IEvent | string
+): Promise<IBooking> {
+  try {
+    const booking = await Booking.findOne({ _id: id });
+    return parseBooking(booking);
+  } catch (err) {
+    console.log("error, could not find booking -> ", err);
+    return err;
+  }
+}
+
+/** cancelBooking cancels a booking */
+export async function cancelBooking(req: {
+  bookingId: string | Types.ObjectId | IEvent;
+}): Promise<IEvent> {
+  try {
+    const booking = await Booking.findOne({ _id: req.bookingId });
+
+    const eventId = booking._doc.event._id;
+    const event = await getEventById(eventId);
+
+    await Booking.deleteOne({ _id: req.bookingId });
+
+    return event;
+  } catch (error) {
+    console.log("error, could not cancel booking", error);
     return error;
   }
 }

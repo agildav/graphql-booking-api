@@ -3,7 +3,7 @@ import { IUserInput, User, IUser } from "./user.model";
 import { getEventsByIds } from "../event/event.service";
 import { Types } from "mongoose";
 
-/** getUsers finds all the users */
+/** getUsers finds all the users and parses them */
 export async function getUsers(): Promise<IUser[]> {
   try {
     const users = await User.find();
@@ -16,7 +16,7 @@ export async function getUsers(): Promise<IUser[]> {
   }
 }
 
-/** getUsersByIds finds all the users by ids */
+/** getUsersByIds finds all the users by ids and parses them */
 export async function getUsersByIds(
   ids: string | Types.ObjectId[] | IUser[]
 ): Promise<IUser[]> {
@@ -31,7 +31,7 @@ export async function getUsersByIds(
   }
 }
 
-/** getUserById finds the user by id */
+/** getUserById finds the user by id and parses it */
 export async function getUserById(
   id: string | Types.ObjectId | IUser
 ): Promise<IUser> {

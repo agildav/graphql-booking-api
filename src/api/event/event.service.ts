@@ -3,7 +3,7 @@ import { User } from "../user/user.model";
 import { getUserById } from "../user/user.service";
 import { Types } from "mongoose";
 
-/** getEvents finds all the event */
+/** getEvents finds all the event and parses them */
 export async function getEvents(): Promise<IEvent[]> {
   try {
     const events = await Event.find();
@@ -16,7 +16,7 @@ export async function getEvents(): Promise<IEvent[]> {
   }
 }
 
-/** getEventsByIds finds all the event by ids */
+/** getEventsByIds finds all the event by ids and parses them */
 export async function getEventsByIds(
   ids: Types.ObjectId[] | IEvent[]
 ): Promise<IEvent[]> {
@@ -31,7 +31,7 @@ export async function getEventsByIds(
   }
 }
 
-/** getEventById finds a single event by id */
+/** getEventById finds a single event by id and parses it */
 export async function getEventById(
   id: Types.ObjectId | IEvent | string
 ): Promise<IEvent> {
@@ -39,7 +39,7 @@ export async function getEventById(
     const event = await Event.findOne({ _id: id });
     return parseEvent(event);
   } catch (err) {
-    console.log("error, could not find events -> ", err);
+    console.log("error, could not find event -> ", err);
     return err;
   }
 }
