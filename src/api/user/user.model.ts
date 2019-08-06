@@ -1,21 +1,21 @@
 import { Schema, model, Document, Types } from "mongoose";
 import { IEvent } from "../event/event.model";
 
-// Receive these props from user
+/** Properties received by user */
 export interface IUserInput {
   email: string;
   password: string;
   username?: string;
 }
 
-// Auto generate these props
-export interface IUser extends IUserInput {
+/** User document */
+export interface IUser extends IUserInput, Document {
+  /** This document */
+  _doc: any;
   _id: any;
   createdAt: string;
   createdEvents: Types.ObjectId[] | IEvent[] | string[];
 }
-
-export interface IUserDoc extends IUser, Document {}
 
 const userSchema = new Schema({
   email: {
@@ -42,4 +42,4 @@ const userSchema = new Schema({
   }
 });
 
-export const User = model<IUserDoc>("User", userSchema);
+export const User = model<IUser>("User", userSchema);

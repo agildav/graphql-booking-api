@@ -1,23 +1,14 @@
-import { IUserInput, User, IUser } from "./user.model";
 import { hash } from "bcryptjs";
-import { IEvent } from "../event/event.model";
-import { findEventsByIds } from "../event/event.service";
+import { IUserInput, User, IUser } from "./user.model";
+import { getEventsByIds } from "../event/event.service";
 import { Types } from "mongoose";
 
-/** getUsers finds all the users and events associated with them */
-export async function getUsers(): Promise<any> {
+/** getUsers finds all the users and parses them */
+export async function getUsers(): Promise<IUser[]> {
   try {
-    const users = await findUsers();
-
-    return users.map(async user => {
-      try {
-        const events: IEvent[] = await findEventsByIds(user.createdEvents);
-        user.createdEvents = events;
-
-        return user;
-      } catch (error) {
-        throw error;
-      }
+    const users = await User.find();
+    return users.map(user => {
+      return parseUser(user);
     });
   } catch (err) {
     console.log("error, could not find users -> ", err);
@@ -25,20 +16,14 @@ export async function getUsers(): Promise<any> {
   }
 }
 
-/** getUsersByIds finds all the users by id and events associated with them */
+/** getUsersByIds finds all the users by ids and parses them */
 export async function getUsersByIds(
-  ids: Types.ObjectId[] | IUser[]
-): Promise<any> {
+  ids: string | Types.ObjectId[] | IUser[]
+): Promise<IUser[]> {
   try {
-    const users = await findUsersByIds(ids);
-    return users.map(async user => {
-      try {
-        const events: IEvent[] = await findEventsByIds(user.createdEvents);
-        user.createdEvents = events;
-        return user;
-      } catch (error) {
-        throw error;
-      }
+    const users = await User.find({ _id: { $in: ids } });
+    return users.map(user => {
+      return parseUser(user);
     });
   } catch (err) {
     console.log("error, could not find users -> ", err);
@@ -46,19 +31,13 @@ export async function getUsersByIds(
   }
 }
 
-/** getUserById finds the user by id and events associated with him */
-export async function getUserById(id: Types.ObjectId | IUser): Promise<any> {
+/** getUserById finds the user by id and parses it */
+export async function getUserById(
+  id: string | Types.ObjectId | IUser
+): Promise<IUser> {
   try {
-    const user = await findUserById(id);
-
-    try {
-      const events: IEvent[] = await findEventsByIds(user.createdEvents);
-      user.createdEvents = events;
-
-      return slimUser(user);
-    } catch (error) {
-      throw error;
-    }
+    const user = await User.findOne({ _id: id });
+    return parseUser(user);
   } catch (err) {
     console.log("error, could not find user -> ", err);
     return err;
@@ -68,7 +47,7 @@ export async function getUserById(id: Types.ObjectId | IUser): Promise<any> {
 /** createUser creates a new user */
 export async function createUser(req: {
   userInput: IUserInput;
-}): Promise<string> {
+}): Promise<IUser> {
   try {
     const foundUser = await User.findOne({ email: req.userInput.email });
     if (foundUser) {
@@ -85,54 +64,20 @@ export async function createUser(req: {
     });
 
     const r = await newUser.save();
-    return r._id;
+    return parseUser(r);
   } catch (err) {
     console.log("error, could not create user -> ", err);
     return err;
   }
 }
 
-/** slimUser hides the password from a user and makes dates human-readable */
-function slimUser(user: IUser): IUser {
-  user.password = null;
-  user.createdAt = new Date(user.createdAt).toISOString();
-  return user;
-}
-
-/** findUsers finds users but does not search for their events */
-export async function findUsers(): Promise<IUser[]> {
-  try {
-    const users = await User.find();
-    return users.map(user => {
-      return slimUser(user);
-    });
-  } catch (error) {
-    throw error;
-  }
-}
-
-/** findUsersByIds finds users by ids but does not search for their events */
-export async function findUsersByIds(
-  ids: Types.ObjectId[] | IUser[] | string
-): Promise<IUser[]> {
-  try {
-    const users = await User.find({ _id: { $in: ids } });
-    return users.map(user => {
-      return slimUser(user);
-    });
-  } catch (error) {
-    throw error;
-  }
-}
-
-/** findUserById finds a single user but does not search for his events */
-export async function findUserById(
-  id: Types.ObjectId | IUser | string
-): Promise<IUser> {
-  try {
-    const user = await User.findOne({ _id: id });
-    return slimUser(user);
-  } catch (error) {
-    throw error;
-  }
+/** parseUser parses a user */
+function parseUser(user: IUser): IUser {
+  return {
+    ...user._doc,
+    _id: user.id,
+    password: null,
+    createdAt: new Date(user.createdAt).toISOString(),
+    createdEvents: getEventsByIds.bind(this, user.createdEvents)
+  };
 }
