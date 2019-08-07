@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": "10.16.0"
+  },
   "name": "graphql-booking-api",
   "version": "1.0.0",
   "description": "GraphQL event booking API written in Node.js with Typescript",
@@ -7,7 +10,7 @@
     "add": "git add .",
     "build": "tsc -p tsconfig.build.json",
     "format": "prettier --write --tab-width 2 \"src/**/*.ts\"",
-    "start": "npm run start:dev",
+    "start": "npm run start:prod",
     "start:dev": "nodemon --config nodemon.json",
     "prestart:prod": "npm run build",
     "start:prod": "node dist/main.js",

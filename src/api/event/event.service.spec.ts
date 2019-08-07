@@ -1,6 +1,7 @@
 import * as mocks from "./event.mocks.spec";
 import * as UserMocks from "../user/user.mocks.spec";
 import EventService from "./event.service";
+import { generateRandomID } from "../../shared/random";
 
 beforeAll(() => {
   mocks.mockFind();
@@ -29,13 +30,16 @@ describe("Event service", () => {
   it("creates an event", async () => {
     expect.assertions(1);
 
-    const response = await EventService.createEvent({
-      eventInput: {
-        title: "title create event test",
-        description: "description create event test",
-        price: Math.random()
-      }
-    });
+    const response = await EventService.createEvent(
+      {
+        eventInput: {
+          title: "title create event test",
+          description: "description create event test",
+          price: Math.random()
+        }
+      },
+      generateRandomID(24)
+    );
 
     expect(response).toBeTruthy();
   });
