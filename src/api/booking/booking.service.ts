@@ -4,6 +4,7 @@ import { IEvent } from "../event/event.model";
 import EventService from "../event/event.service";
 import UserService from "../user/user.service";
 
+/** Booking service */
 export default class BookingService {
   /** parseBooking parses a booking */
   private static parseBooking(booking: IBooking): IBooking {

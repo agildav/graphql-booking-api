@@ -1,6 +1,7 @@
 import EventService from "../api/event/event.service";
 import UserService from "../api/user/user.service";
 import BookingService from "../api/booking/booking.service";
+import AuthService from "../api/auth/auth.service";
 
 export const graphqlResolvers = {
   // RootQuery
@@ -12,6 +13,9 @@ export const graphqlResolvers = {
   },
   bookings: async function bookings() {
     return BookingService.getBookings();
+  },
+  login: async function login(req) {
+    return AuthService.login(req);
   },
   // RootMutation
   createEvent: async function createEvent(req) {

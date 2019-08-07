@@ -3,6 +3,7 @@ import { User, IUser } from "../user/user.model";
 import { Types } from "mongoose";
 import UserService from "../user/user.service";
 
+/** Event service */
 export default class EventService {
   /** parseEvent parses an event */
   private static parseEvent(event: IEvent): IEvent {

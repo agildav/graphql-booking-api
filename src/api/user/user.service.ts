@@ -3,6 +3,7 @@ import { IUserInput, User, IUser } from "./user.model";
 import { Types } from "mongoose";
 import EventService from "../event/event.service";
 
+/** User service */
 export default class UserService {
   /** parseUser parses a user */
   private static parseUser(user: IUser): IUser {
@@ -49,6 +50,17 @@ export default class UserService {
   ): Promise<IUser> {
     try {
       const user = await User.findOne({ _id: id });
+      return UserService.parseUser(user);
+    } catch (err) {
+      console.log("error, could not find user -> ", err);
+      return err;
+    }
+  }
+
+  /** getUserByEmail finds the user by email and parses it */
+  static async getUserByEmail(email: string): Promise<IUser> {
+    try {
+      const user = await User.findOne({ email });
       return UserService.parseUser(user);
     } catch (err) {
       console.log("error, could not find user -> ", err);

@@ -13,7 +13,7 @@ export interface IBooking extends Document {
   user: Types.ObjectId | IUser | string;
 }
 
-const eventSchema = new Schema({
+const bookingSchema = new Schema({
   createdAt: {
     type: String,
     required: true
@@ -33,4 +33,4 @@ const eventSchema = new Schema({
   }
 });
 
-export const Booking = model<IBooking>("Booking", eventSchema);
+export const Booking = model<IBooking>("Booking", bookingSchema);
