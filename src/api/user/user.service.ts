@@ -3,6 +3,7 @@ import { IUserInput, User, IUser } from "./user.model";
 import { Types } from "mongoose";
 import EventService from "../event/event.service";
 
+/** User service */
 export default class UserService {
   /** parseUser parses a user */
   private static parseUser(user: IUser): IUser {
@@ -56,19 +57,30 @@ export default class UserService {
     }
   }
 
-  /** createUser creates a new user */
-  static async createUser(req: { userInput: IUserInput }): Promise<IUser> {
+  /** getUserByEmail finds the user by email and parses it */
+  static async getUserByEmail(email: string): Promise<IUser> {
     try {
-      const foundUser = await User.findOne({ email: req.userInput.email });
+      const user = await User.findOne({ email });
+      return UserService.parseUser(user);
+    } catch (err) {
+      console.log("error, could not find user -> ", err);
+      return err;
+    }
+  }
+
+  /** registerUser signs up a new user */
+  static async registerUser(args: { userInput: IUserInput }): Promise<IUser> {
+    try {
+      const foundUser = await User.findOne({ email: args.userInput.email });
       if (foundUser) {
         throw new Error("user already exists");
       }
 
-      const hashedPassword = await hash(req.userInput.password, 12);
+      const hashedPassword = await hash(args.userInput.password, 12);
       const newUser = new User({
-        email: req.userInput.email,
+        email: args.userInput.email,
         password: hashedPassword,
-        username: req.userInput.username,
+        username: args.userInput.username,
         createdAt: new Date().toISOString(),
         createdEvents: []
       });

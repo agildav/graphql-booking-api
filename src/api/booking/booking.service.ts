@@ -4,6 +4,7 @@ import { IEvent } from "../event/event.model";
 import EventService from "../event/event.service";
 import UserService from "../user/user.service";
 
+/** Booking service */
 export default class BookingService {
   /** parseBooking parses a booking */
   private static parseBooking(booking: IBooking): IBooking {
@@ -32,17 +33,18 @@ export default class BookingService {
   }
 
   /** bookEvent books an event */
-  static async bookEvent(req: {
-    eventId: Types.ObjectId | IEvent | string;
-  }): Promise<IBooking> {
+  static async bookEvent(
+    args: {
+      eventId: Types.ObjectId | IEvent | string;
+    },
+    userId: string
+  ): Promise<IBooking> {
     try {
-      // TODO: Avoid booking existing
-      const event = await EventService.getEventById(req.eventId);
+      const event = await EventService.getEventById(args.eventId);
       const date = new Date().toISOString();
 
-      // TODO: Change this
       const booking = new Booking({
-        user: "5d47041776fd06350469db27",
+        user: userId,
         event,
         createdAt: date,
         updatedAt: date
@@ -71,16 +73,16 @@ export default class BookingService {
   }
 
   /** cancelBooking cancels a booking */
-  static async cancelBooking(req: {
+  static async cancelBooking(args: {
     bookingId: string | Types.ObjectId | IEvent;
   }): Promise<IEvent> {
     try {
-      const booking = await Booking.findOne({ _id: req.bookingId });
+      const booking = await Booking.findOne({ _id: args.bookingId });
 
       const eventId = booking.event;
       const event = await EventService.getEventById(eventId);
 
-      await Booking.deleteOne({ _id: req.bookingId });
+      await Booking.deleteOne({ _id: args.bookingId });
 
       return event;
     } catch (error) {

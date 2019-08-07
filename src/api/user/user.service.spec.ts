@@ -22,11 +22,11 @@ describe("User service", () => {
     expect(response).toHaveLength(qtyUsers);
   });
 
-  it("creates a user", async () => {
+  it("registers a user", async () => {
     expect.assertions(1);
     const mockFindOne = mocks.mockFindOneNotExisting();
 
-    const response = await UserService.createUser({
+    const response = await UserService.registerUser({
       userInput: {
         email: "test user email",
         password: "test user password",
@@ -38,11 +38,11 @@ describe("User service", () => {
     mockFindOne.mockRestore();
   });
 
-  it("does not create an existing user", async () => {
+  it("does not register an existing user", async () => {
     expect.assertions(1);
     const mockFindOne = mocks.mockFindOneExisting();
 
-    const response = await UserService.createUser({
+    const response = await UserService.registerUser({
       userInput: {
         email: "test user email",
         password: "test user password",
