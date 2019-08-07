@@ -5,7 +5,7 @@ export async function init(app: Application): Promise<void> {
   try {
     console.log(":: Router, starting");
 
-    await new Graphql().graphqlInit(app);
+    await Graphql.graphqlInit(app);
 
     console.log(":: Router, ready");
     return;

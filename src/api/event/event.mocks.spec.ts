@@ -1,16 +1,8 @@
 import { Event } from "./event.model";
+import EventService from "./event.service";
+import { generateRandomID } from "../../shared/random";
 
-const generateRandomID = length => {
-  let result = "";
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-};
-
+/** Mock for finding events */
 export function mockFind() {
   const mock = jest.spyOn(Event, "find");
   mock.mockImplementation(
@@ -47,15 +39,41 @@ export function mockFind() {
   return mock;
 }
 
+/** Mock for saving an event */
 export function mockSave() {
   const mock = jest.spyOn(Event.prototype, "save");
   mock.mockImplementation(
     (): any =>
       new Promise(resolve => {
         resolve({
-          _id: generateRandomID(24)
+          _id: generateRandomID(24),
+          title: "mock title save",
+          description: "mock description save",
+          price: Math.random(),
+          date: new Date().toISOString(),
+          creator: generateRandomID(24)
         });
       })
   );
+  return mock;
+}
+
+/** Mock for adding an event to a user */
+export function mockPushEventToCreator() {
+  const mock = jest.spyOn(EventService, "pushEventToCreator");
+  mock.mockImplementation(
+    (): any =>
+      new Promise(resolve => {
+        resolve({
+          _id: generateRandomID(24),
+          email: "mock email two",
+          password: "mock password two",
+          username: "mock username two",
+          createdAt: new Date().toISOString(),
+          createdEvents: [generateRandomID(24)]
+        });
+      })
+  );
+
   return mock;
 }

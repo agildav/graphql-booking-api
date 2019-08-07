@@ -1,6 +1,6 @@
-import * as EventService from "../../api/event/event.service";
-import * as UserService from "../../api/user/user.service";
-import * as BookingService from "../../api/booking/booking.service";
+import EventService from "../api/event/event.service";
+import UserService from "../api/user/user.service";
+import BookingService from "../api/booking/booking.service";
 
 export const graphqlResolvers = {
   // RootQuery

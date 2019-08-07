@@ -1,16 +1,7 @@
 import { User } from "./user.model";
+import { generateRandomID } from "../../shared/random";
 
-const generateRandomID = length => {
-  let result = "";
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-};
-
+/** Mock find users */
 export function mockFind() {
   const mock = jest.spyOn(User, "find");
   mock.mockImplementation(
@@ -51,19 +42,26 @@ export function mockFind() {
   return mock;
 }
 
+/** Mock save user */
 export function mockSave() {
   const mock = jest.spyOn(User.prototype, "save");
   mock.mockImplementation(
     (): any =>
       new Promise(resolve => {
         resolve({
-          _id: generateRandomID(24)
+          _id: generateRandomID(24),
+          email: "mock email save",
+          password: "mock password save",
+          username: "mock username save",
+          createdAt: new Date().toISOString(),
+          createdEvents: []
         });
       })
   );
   return mock;
 }
 
+/** Mock find one existing user */
 export function mockFindOneExisting() {
   const mock = jest.spyOn(User, "findOne");
   mock.mockImplementation(
@@ -86,19 +84,9 @@ export function mockFindOneExisting() {
   return mock;
 }
 
+/** Mock find not existing user */
 export function mockFindOneNotExisting() {
   const mock = jest.spyOn(User, "findOne");
-  mock.mockImplementation(
-    (): any =>
-      new Promise(resolve => {
-        resolve(false);
-      })
-  );
-  return mock;
-}
-
-export function mockFindById() {
-  const mock = jest.spyOn(User, "findById");
   mock.mockImplementation(
     (): any =>
       new Promise(resolve => {

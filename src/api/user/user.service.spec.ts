@@ -1,6 +1,6 @@
-import * as UserService from "./user.service";
 import * as mocks from "./user.mocks.spec";
 import * as EventMocks from "../event/event.mocks.spec";
+import UserService from "./user.service";
 
 beforeAll(() => {
   mocks.mockFind();

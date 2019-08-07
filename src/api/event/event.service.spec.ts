@@ -1,12 +1,15 @@
-import * as EventService from "./event.service";
 import * as mocks from "./event.mocks.spec";
 import * as UserMocks from "../user/user.mocks.spec";
+import EventService from "./event.service";
 
 beforeAll(() => {
   mocks.mockFind();
   mocks.mockSave();
+  mocks.mockPushEventToCreator();
+
   UserMocks.mockFind();
   UserMocks.mockFindOneExisting();
+  UserMocks.mockSave();
 });
 
 afterAll(() => {

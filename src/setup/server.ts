@@ -29,22 +29,24 @@ export const init = () => {
     .init(app)
     .then(() => {
       console.log(":: MongoDB, starting");
-      connect(
+      return connect(
         dbURL,
         { useNewUrlParser: true }
       )
         .then(() => {
           console.log(":: MongoDB, ready");
-          app.listen(port, () => {
+          return app.listen(port, () => {
             console.log(":: Server, ready");
             return console.log(`:: Server is listening on port ${port}`);
           });
         })
         .catch(err => {
           console.log("error initializing database -> ", err);
+          return;
         });
     })
     .catch(err => {
       console.log("error initializing server -> ", err);
+      return;
     });
 };

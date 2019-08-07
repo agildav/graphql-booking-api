@@ -1,10 +1,11 @@
-import { Application } from "express";
 import graphqlHttp from "express-graphql";
-import { graphqlSchema } from "../graphql/schema/schema";
-import { graphqlResolvers } from "../graphql/resolvers/resolvers";
+import { Application } from "express";
+import { graphqlSchema } from "../graphql/schema";
+import { graphqlResolvers } from "../graphql/resolvers";
 
+/** Initialize GraphQL server */
 export default class Graphql {
-  async graphqlInit(app: Application): Promise<void> {
+  static async graphqlInit(app: Application): Promise<void> {
     console.log(":: Setting GraphQL");
     const endpoint = "/graphql";
 
