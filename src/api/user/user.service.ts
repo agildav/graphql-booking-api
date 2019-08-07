@@ -68,19 +68,19 @@ export default class UserService {
     }
   }
 
-  /** createUser creates a new user */
-  static async createUser(req: { userInput: IUserInput }): Promise<IUser> {
+  /** registerUser signs up a new user */
+  static async registerUser(args: { userInput: IUserInput }): Promise<IUser> {
     try {
-      const foundUser = await User.findOne({ email: req.userInput.email });
+      const foundUser = await User.findOne({ email: args.userInput.email });
       if (foundUser) {
         throw new Error("user already exists");
       }
 
-      const hashedPassword = await hash(req.userInput.password, 12);
+      const hashedPassword = await hash(args.userInput.password, 12);
       const newUser = new User({
-        email: req.userInput.email,
+        email: args.userInput.email,
         password: hashedPassword,
-        username: req.userInput.username,
+        username: args.userInput.username,
         createdAt: new Date().toISOString(),
         createdEvents: []
       });

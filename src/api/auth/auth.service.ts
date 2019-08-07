@@ -1,9 +1,7 @@
 import { compare } from "bcryptjs";
-import { IAuth, IAuthInput } from "./auth.model";
+import { IAuth, IAuthInput, IAuthMiddleware } from "./auth.model";
 import { User, IUser } from "../user/user.model";
-import { sign } from "jsonwebtoken";
-
-// TODO: createUser() must be here
+import { sign, verify } from "jsonwebtoken";
 
 /** Auth service */
 export default class AuthService {
@@ -53,6 +51,42 @@ export default class AuthService {
     );
 
     return token;
+  }
+
+  /** validateToken checks if a user is authenticated */
+  static validateToken(req: IAuthMiddleware, res, next) {
+    const authHeader = req.get("Authorization");
+    if (!authHeader) {
+      req.isAuth = false;
+      return next();
+    }
+
+    // Bearer <token>
+    const token = authHeader.split(" ")[1];
+
+    if (!token || token === "") {
+      req.isAuth = false;
+      return next();
+    }
+
+    let decodedToken: any;
+    try {
+      decodedToken = verify(token, process.env.TOKEN_SECRET_KEY);
+    } catch (error) {
+      req.isAuth = false;
+      return next();
+    }
+
+    if (!decodedToken) {
+      req.isAuth = false;
+      return next();
+    }
+
+    // User is authenticated, pass
+    req.isAuth = true;
+    req.userId = decodedToken.userId;
+
+    next();
   }
 
   /** login signs in a user and sets tokens */

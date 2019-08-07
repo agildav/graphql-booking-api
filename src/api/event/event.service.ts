@@ -57,12 +57,12 @@ export default class EventService {
   }
 
   /** createEvent creates a new event */
-  static async createEvent(req: { eventInput: IEventInput }): Promise<IEvent> {
+  static async createEvent(
+    args: { eventInput: IEventInput },
+    userId: string
+  ): Promise<IEvent> {
     try {
-      // TODO: Get from headers
-      const creatorId = Types.ObjectId.createFromHexString(
-        "5d47041776fd06350469db27"
-      );
+      const creatorId = Types.ObjectId.createFromHexString(userId);
 
       const creator = await User.findById(creatorId);
       if (!creator) {
@@ -70,9 +70,9 @@ export default class EventService {
       }
 
       const newEvent = new Event({
-        title: req.eventInput.title,
-        description: req.eventInput.description,
-        price: req.eventInput.price,
+        title: args.eventInput.title,
+        description: args.eventInput.description,
+        price: args.eventInput.price,
         date: new Date().toISOString(),
         creator: creatorId
       });
