@@ -24,10 +24,7 @@ export default class AuthService {
         user.password
       );
       if (!matchPassword) {
-        console.log(
-          "error: user with this password does not match -> ",
-          req.authInput.password
-        );
+        console.log("error: user password does not match");
         throw new Error("invalid credentials");
       }
 
