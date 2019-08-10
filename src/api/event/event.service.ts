@@ -11,6 +11,7 @@ export default class EventService {
       ...event._doc,
       _id: event.id,
       date: new Date(event.date).toISOString(),
+      createdAt: new Date(event.createdAt).toISOString(),
       creator: UserService.getUserById.bind(this, event.creator)
     };
   }
@@ -73,7 +74,8 @@ export default class EventService {
         title: args.eventInput.title,
         description: args.eventInput.description,
         price: args.eventInput.price,
-        date: new Date().toISOString(),
+        date: new Date(args.eventInput.date).toISOString(),
+        createdAt: new Date().toISOString(),
         creator: creatorId
       });
 

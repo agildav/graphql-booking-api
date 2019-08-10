@@ -6,6 +6,7 @@ export interface IEventInput {
   title: string;
   description: string;
   price: number;
+  date: string;
 }
 
 /** Event document */
@@ -13,7 +14,7 @@ export interface IEvent extends IEventInput, Document {
   /** This document */
   _doc: any;
   _id: any;
-  date: string;
+  createdAt: string;
   creator: Types.ObjectId | IUser | string;
 }
 
@@ -31,6 +32,10 @@ const eventSchema = new Schema({
     type: Number
   },
   date: {
+    required: true,
+    type: String
+  },
+  createdAt: {
     required: true,
     type: String
   },

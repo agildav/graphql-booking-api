@@ -15,6 +15,7 @@ export function mockFind() {
             description: "mock description one",
             price: Math.random(),
             date: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
             creator: generateRandomID(24)
           },
           {
@@ -23,6 +24,7 @@ export function mockFind() {
             description: "mock description two",
             price: Math.random(),
             date: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
             creator: generateRandomID(24)
           },
           {
@@ -31,6 +33,7 @@ export function mockFind() {
             description: "mock description three",
             price: Math.random(),
             date: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
             creator: generateRandomID(24)
           }
         ]);
@@ -51,6 +54,7 @@ export function mockSave() {
           description: "mock description save",
           price: Math.random(),
           date: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
           creator: generateRandomID(24)
         });
       })

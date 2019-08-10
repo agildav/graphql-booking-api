@@ -35,7 +35,8 @@ describe("Event service", () => {
         eventInput: {
           title: "title create event test",
           description: "description create event test",
-          price: Math.random()
+          price: Math.random(),
+          date: new Date().toISOString()
         }
       },
       generateRandomID(24)

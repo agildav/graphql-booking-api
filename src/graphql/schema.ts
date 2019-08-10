@@ -15,6 +15,7 @@ export const graphqlSchema = buildSchema(`
     description: String!
     price: Float!
     date: String!
+    createdAt: String!
     creator: User!
   }
 
@@ -38,6 +39,7 @@ export const graphqlSchema = buildSchema(`
     title: String!
     description: String!
     price: Float!
+    date: String!
   }
 
   input UserInput {
