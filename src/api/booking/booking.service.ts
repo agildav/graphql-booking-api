@@ -19,9 +19,9 @@ export default class BookingService {
   }
 
   /** getBookings finds all the bookings and parses them */
-  static async getBookings(): Promise<IBooking[]> {
+  static async getBookings(userId: string): Promise<IBooking[]> {
     try {
-      const bookings = await Booking.find();
+      const bookings = await Booking.find({ user: userId });
       return bookings.map(booking => {
         return BookingService.parseBooking(booking);
       });

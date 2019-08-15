@@ -25,7 +25,7 @@ export const graphqlResolvers = {
       throw new Error("unauthenticated");
     }
 
-    return BookingService.getBookings();
+    return BookingService.getBookings(req.userId);
   },
   login: async function login(args: any, req) {
     return AuthService.login(args);
