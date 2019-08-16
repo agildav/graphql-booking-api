@@ -1,7 +1,8 @@
 import { compare } from "bcryptjs";
-import { IAuth, IAuthInput, IAuthMiddleware } from "./auth.model";
+import { IAuth, IAuthInput, IAuthMiddleware, IAuthByToken } from "./auth.model";
 import { User, IUser } from "../user/user.model";
 import { sign, verify } from "jsonwebtoken";
+import UserService from "../user/user.service";
 
 /** Auth service */
 export default class AuthService {
@@ -89,9 +90,10 @@ export default class AuthService {
   /** login signs in a user and sets tokens */
   static async login(req: { authInput: IAuthInput }): Promise<IAuth> {
     try {
+      // TODO: Integrate with Redis
       const user = await AuthService.validateCredentials(req);
 
-      const tokenExpiration: string = "2h";
+      const tokenExpiration: string = "6h";
       const token = AuthService.createToken(user, tokenExpiration);
       const auth: IAuth = {
         userId: user.id,
@@ -103,6 +105,41 @@ export default class AuthService {
       return auth;
     } catch (error) {
       console.log("error, could not login user -> ", error);
+      return error;
+    }
+  }
+
+  /** login signs in a user and sets tokens */
+  static async loginWithToken(req: {
+    tokenInput: { token: string };
+  }): Promise<IAuthByToken> {
+    try {
+      // TODO: Integrate with Redis
+      let decodedToken: any;
+      try {
+        decodedToken = verify(
+          req.tokenInput.token,
+          process.env.TOKEN_SECRET_KEY
+        );
+        if (!decodedToken) {
+          throw new Error("no decoded token");
+        }
+      } catch (error) {
+        throw error;
+      }
+
+      const tokenExpiration: string = "6h";
+      const authUser: IAuthByToken = {
+        userId: decodedToken.userId,
+        token: req.tokenInput.token,
+        tokenExpiration,
+        lastChecked: new Date().toISOString(),
+        email: decodedToken.email
+      };
+
+      return authUser;
+    } catch (error) {
+      console.log("error, could not authenticate user by token -> ", error);
       return error;
     }
   }

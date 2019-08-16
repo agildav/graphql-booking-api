@@ -30,6 +30,9 @@ export const graphqlResolvers = {
   login: async function login(args: any, req) {
     return AuthService.login(args);
   },
+  loginWithToken: async function loginWithToken(args: any, req) {
+    return AuthService.loginWithToken(args);
+  },
 
   // ------------------------------------------------------------------------------------------------
 

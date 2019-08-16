@@ -21,3 +21,8 @@ export interface IAuth {
   tokenExpiration: string;
   lastChecked?: string;
 }
+
+/** Auth model by logging in with token */
+export interface IAuthByToken extends IAuth {
+  email: string;
+}
