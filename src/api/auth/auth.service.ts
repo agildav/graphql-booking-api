@@ -2,7 +2,6 @@ import { compare } from "bcryptjs";
 import { IAuth, IAuthInput, IAuthMiddleware, IAuthByToken } from "./auth.model";
 import { User, IUser } from "../user/user.model";
 import { sign, verify } from "jsonwebtoken";
-import UserService from "../user/user.service";
 
 /** Auth service */
 export default class AuthService {
