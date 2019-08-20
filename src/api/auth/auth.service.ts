@@ -8,16 +8,17 @@ import {
 } from "./auth.model";
 import { User, IUser } from "../user/user.model";
 import { sign, verify } from "jsonwebtoken";
+import { RedisClient } from "redis";
 import Redis from "../../setup/redis";
 
 /** Auth service */
 export default class AuthService {
   private static tokenExpiration: string = "24h";
+  private static redis: RedisClient = Redis.getRedisClient();
 
   private static saveToken = (key: string, value: string): Promise<any> => {
-    const redis = Redis.getRedisClient();
     return new Promise((resolve, reject) => {
-      redis.set(key, value, (err, res) => {
+      AuthService.redis.set(key, value, (err, res) => {
         if (err != null) {
           return reject(err);
         }
@@ -28,10 +29,8 @@ export default class AuthService {
   };
 
   private static searchToken = (key: string): Promise<any> => {
-    const redis = Redis.getRedisClient();
-
     return new Promise((resolve, reject) => {
-      redis.get(key, (err, response) => {
+      AuthService.redis.get(key, (err, response) => {
         if (err != null) {
           return reject(err);
         }
@@ -41,10 +40,8 @@ export default class AuthService {
   };
 
   private static removeToken = (key: string): Promise<any> => {
-    const redis = Redis.getRedisClient();
-
     return new Promise((resolve, reject) => {
-      redis.del(key, (err, res) => {
+      AuthService.redis.del(key, (err, res) => {
         if (err != null) {
           return reject(err);
         }
