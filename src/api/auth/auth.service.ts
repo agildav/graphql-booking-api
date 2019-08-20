@@ -14,6 +14,46 @@ import Redis from "../../setup/redis";
 export default class AuthService {
   private static tokenExpiration: string = "24h";
 
+  private static saveToken = (key: string, value: string): Promise<any> => {
+    const redis = Redis.getRedisClient();
+    return new Promise((resolve, reject) => {
+      redis.set(key, value, (err, res) => {
+        if (err != null) {
+          return reject(err);
+        }
+
+        return resolve(res);
+      });
+    });
+  };
+
+  private static searchToken = (key: string): Promise<any> => {
+    const redis = Redis.getRedisClient();
+
+    return new Promise((resolve, reject) => {
+      redis.get(key, (err, response) => {
+        if (err != null) {
+          return reject(err);
+        }
+        return resolve(response);
+      });
+    });
+  };
+
+  private static removeToken = (key: string): Promise<any> => {
+    const redis = Redis.getRedisClient();
+
+    return new Promise((resolve, reject) => {
+      redis.del(key, (err, res) => {
+        if (err != null) {
+          return reject(err);
+        }
+
+        return resolve(res);
+      });
+    });
+  };
+
   /** validateCredentials validates the given email and password */
   private static async validateCredentials(req: {
     authInput: IAuthInput;
@@ -179,31 +219,36 @@ export default class AuthService {
     }
   }
 
-  private static saveToken = (key: string, value: string): Promise<any> => {
-    const redis = Redis.getRedisClient();
-    return new Promise((resolve, reject) => {
-      redis.set(key, value, (err, res) => {
-        if (err != null) {
-          return reject(err);
+  /** logouts a user */
+  static async logout(req: { tokenInput: { token: string } }): Promise<any> {
+    try {
+      let decodedToken: any;
+      try {
+        decodedToken = verify(
+          req.tokenInput.token,
+          process.env.TOKEN_SECRET_KEY
+        );
+        if (!decodedToken) {
+          throw new Error("no decoded token");
         }
+      } catch (error) {
+        throw error;
+      }
 
-        return resolve(res);
-      });
-    });
-  };
+      await AuthService.removeToken(req.tokenInput.token);
 
-  private static searchToken = (key: string): Promise<any> => {
-    const redis = Redis.getRedisClient();
+      const authUser: IAuthByToken = {
+        userId: decodedToken.userId,
+        token: req.tokenInput.token,
+        tokenExpiration: AuthService.tokenExpiration,
+        lastChecked: new Date().toISOString(),
+        email: decodedToken.email
+      };
 
-    return new Promise((resolve, reject) => {
-      redis.get(key, (err, response) => {
-        if (err != null) {
-          return reject(err);
-        }
-        return resolve(response);
-      });
-    });
-  };
-
-  // TODO: Logout -> remove token from redis
+      return authUser;
+    } catch (error) {
+      console.log("error, could not logout user -> ", error);
+      return error;
+    }
+  }
 }

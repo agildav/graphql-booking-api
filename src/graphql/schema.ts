@@ -71,6 +71,7 @@ export const graphqlSchema = buildSchema(`
     bookings: [Booking!]!
     login(authInput: AuthInput): Auth!
     loginWithToken(tokenInput: TokenInput): AuthByToken!
+    logout(tokenInput: TokenInput): AuthByToken!
   }
 
   type RootMutation {
