@@ -26,3 +26,9 @@ export interface IAuth {
 export interface IAuthByToken extends IAuth {
   email: string;
 }
+
+/** Auth model stored at Redis */
+export interface IAuthAtRedis {
+  email: string;
+  userId: string;
+}

@@ -1,10 +1,19 @@
 import { compare } from "bcryptjs";
-import { IAuth, IAuthInput, IAuthMiddleware, IAuthByToken } from "./auth.model";
+import {
+  IAuth,
+  IAuthInput,
+  IAuthMiddleware,
+  IAuthByToken,
+  IAuthAtRedis
+} from "./auth.model";
 import { User, IUser } from "../user/user.model";
 import { sign, verify } from "jsonwebtoken";
+import Redis from "../../setup/redis";
 
 /** Auth service */
 export default class AuthService {
+  private static tokenExpiration: string = "24h";
+
   /** validateCredentials validates the given email and password */
   private static async validateCredentials(req: {
     authInput: IAuthInput;
@@ -35,7 +44,7 @@ export default class AuthService {
   }
 
   /** createToken creates a new JWT for a given user */
-  private static createToken(user: IUser, tokenExpiration: string): string {
+  private static createToken(user: IUser): string {
     const token = sign(
       {
         userId: user.id,
@@ -43,7 +52,7 @@ export default class AuthService {
       },
       process.env.TOKEN_SECRET_KEY,
       {
-        expiresIn: tokenExpiration
+        expiresIn: AuthService.tokenExpiration
       }
     );
 
@@ -79,25 +88,47 @@ export default class AuthService {
       return next();
     }
 
-    // User is authenticated, pass
-    req.isAuth = true;
-    req.userId = decodedToken.userId;
+    let userData: string;
+    // Check on redis
+    return AuthService.searchToken(token)
+      .then((data: string) => {
+        userData = data;
 
-    next();
+        if (!userData) {
+          req.isAuth = false;
+          return next();
+        }
+
+        // User is authenticated, pass
+        req.isAuth = true;
+        req.userId = decodedToken.userId;
+
+        return next();
+      })
+      .catch(err => {
+        req.isAuth = false;
+        return next();
+      });
   }
 
   /** login signs in a user and sets tokens */
   static async login(req: { authInput: IAuthInput }): Promise<IAuth> {
     try {
-      // TODO: Integrate with Redis
       const user = await AuthService.validateCredentials(req);
 
-      const tokenExpiration: string = "6h";
-      const token = AuthService.createToken(user, tokenExpiration);
+      const token = AuthService.createToken(user);
+
+      const storeAuth: IAuthAtRedis = {
+        userId: user.id,
+        email: user.email
+      };
+
+      await AuthService.saveToken(token, JSON.stringify(storeAuth));
+
       const auth: IAuth = {
         userId: user.id,
         token,
-        tokenExpiration,
+        tokenExpiration: AuthService.tokenExpiration,
         lastChecked: new Date().toISOString()
       };
 
@@ -113,7 +144,6 @@ export default class AuthService {
     tokenInput: { token: string };
   }): Promise<IAuthByToken> {
     try {
-      // TODO: Integrate with Redis
       let decodedToken: any;
       try {
         decodedToken = verify(
@@ -127,13 +157,19 @@ export default class AuthService {
         throw error;
       }
 
-      const tokenExpiration: string = "6h";
+      const userData: IAuthAtRedis = JSON.parse(
+        await AuthService.searchToken(req.tokenInput.token)
+      );
+      if (!userData) {
+        throw new Error("an error occured searching for token");
+      }
+
       const authUser: IAuthByToken = {
-        userId: decodedToken.userId,
+        userId: userData.userId,
         token: req.tokenInput.token,
-        tokenExpiration,
+        tokenExpiration: AuthService.tokenExpiration,
         lastChecked: new Date().toISOString(),
-        email: decodedToken.email
+        email: userData.email
       };
 
       return authUser;
@@ -142,4 +178,32 @@ export default class AuthService {
       return error;
     }
   }
+
+  private static saveToken = (key: string, value: string): Promise<any> => {
+    const redis = Redis.getRedisClient();
+    return new Promise((resolve, reject) => {
+      redis.set(key, value, (err, res) => {
+        if (err != null) {
+          return reject(err);
+        }
+
+        return resolve(res);
+      });
+    });
+  };
+
+  private static searchToken = (key: string): Promise<any> => {
+    const redis = Redis.getRedisClient();
+
+    return new Promise((resolve, reject) => {
+      redis.get(key, (err, response) => {
+        if (err != null) {
+          return reject(err);
+        }
+        return resolve(response);
+      });
+    });
+  };
+
+  // TODO: Logout -> remove token from redis
 }
