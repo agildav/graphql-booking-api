@@ -18,7 +18,7 @@ export interface IAuthInput {
 export interface IAuth {
   userId: string;
   token: string;
-  tokenExpiration: string;
+  tokenExpiration?: string;
   lastChecked?: string;
 }
 

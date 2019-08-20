@@ -8,17 +8,13 @@ import {
 } from "./auth.model";
 import { User, IUser } from "../user/user.model";
 import { sign, verify } from "jsonwebtoken";
-import { RedisClient } from "redis";
 import Redis from "../../setup/redis";
 
 /** Auth service */
 export default class AuthService {
-  private static tokenExpiration: string = "24h";
-  private static redis: RedisClient = Redis.getRedisClient();
-
   private static saveToken = (key: string, value: string): Promise<any> => {
     return new Promise((resolve, reject) => {
-      AuthService.redis.set(key, value, (err, res) => {
+      Redis.getRedisClient().set(key, value, (err, res) => {
         if (err != null) {
           return reject(err);
         }
@@ -30,7 +26,7 @@ export default class AuthService {
 
   private static searchToken = (key: string): Promise<any> => {
     return new Promise((resolve, reject) => {
-      AuthService.redis.get(key, (err, response) => {
+      Redis.getRedisClient().get(key, (err, response) => {
         if (err != null) {
           return reject(err);
         }
@@ -41,7 +37,7 @@ export default class AuthService {
 
   private static removeToken = (key: string): Promise<any> => {
     return new Promise((resolve, reject) => {
-      AuthService.redis.del(key, (err, res) => {
+      Redis.getRedisClient().del(key, (err, res) => {
         if (err != null) {
           return reject(err);
         }
@@ -87,10 +83,7 @@ export default class AuthService {
         userId: user.id,
         email: user.email
       },
-      process.env.TOKEN_SECRET_KEY,
-      {
-        expiresIn: AuthService.tokenExpiration
-      }
+      process.env.TOKEN_SECRET_KEY
     );
 
     return token;
@@ -165,7 +158,6 @@ export default class AuthService {
       const auth: IAuth = {
         userId: user.id,
         token,
-        tokenExpiration: AuthService.tokenExpiration,
         lastChecked: new Date().toISOString()
       };
 
@@ -204,7 +196,6 @@ export default class AuthService {
       const authUser: IAuthByToken = {
         userId: userData.userId,
         token: req.tokenInput.token,
-        tokenExpiration: AuthService.tokenExpiration,
         lastChecked: new Date().toISOString(),
         email: userData.email
       };
@@ -217,7 +208,7 @@ export default class AuthService {
   }
 
   /** logouts a user */
-  static async logout(req: { tokenInput: { token: string } }): Promise<any> {
+  static async logout(req: { tokenInput: { token: string } }): Promise<IAuth> {
     try {
       let decodedToken: any;
       try {
@@ -237,7 +228,6 @@ export default class AuthService {
       const authUser: IAuthByToken = {
         userId: decodedToken.userId,
         token: req.tokenInput.token,
-        tokenExpiration: AuthService.tokenExpiration,
         lastChecked: new Date().toISOString(),
         email: decodedToken.email
       };
