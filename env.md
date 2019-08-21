@@ -16,4 +16,10 @@ DB_USER=<db user>
 DB_PASSWORD=<db password>
 DB_CLUSTER=<db cluster>
 DB_NAME=<db name>
+
+# REDIS
+REDIS_PASSWORD=<redis password>
+REDIS_HOST=<redis endpoint>
+REDIS_PORT=<redis port>
+
 ```

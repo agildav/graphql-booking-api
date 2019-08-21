@@ -18,11 +18,17 @@ export interface IAuthInput {
 export interface IAuth {
   userId: string;
   token: string;
-  tokenExpiration: string;
+  tokenExpiration?: string;
   lastChecked?: string;
 }
 
 /** Auth model by logging in with token */
 export interface IAuthByToken extends IAuth {
   email: string;
+}
+
+/** Auth model stored at Redis */
+export interface IAuthAtRedis {
+  email: string;
+  userId: string;
 }

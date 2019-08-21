@@ -31,7 +31,7 @@ export const graphqlSchema = buildSchema(`
   type Auth {
     userId: ID!
     token: String!
-    tokenExpiration: String!
+    tokenExpiration: String
     lastChecked: String
   }
 
@@ -39,7 +39,7 @@ export const graphqlSchema = buildSchema(`
     userId: ID!
     email: String!
     token: String!
-    tokenExpiration: String!
+    tokenExpiration: String
     lastChecked: String
   }
 
@@ -71,6 +71,7 @@ export const graphqlSchema = buildSchema(`
     bookings: [Booking!]!
     login(authInput: AuthInput): Auth!
     loginWithToken(tokenInput: TokenInput): AuthByToken!
+    logout(tokenInput: TokenInput): AuthByToken!
   }
 
   type RootMutation {
